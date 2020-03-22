@@ -84,7 +84,92 @@ def update_cost_budget(service, get_vali_data):
 
 
 def update_power_budget(service, get_vali_data):
-    pass
+    # ------------------- power of modes
+    power_for_detumble_mode_info = get_vali_data.get_power_for_detumble_mode()
+    range_power_for_detumble_mode = 'B6:B14'
+    range_power_calc_for_detumble_mode = 'B3:B11'
+    write_to_google_sheets(power_for_detumble_mode_info, range_power_for_detumble_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(power_for_detumble_mode_info, range_power_calc_for_detumble_mode, SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    power_for_safe_mode_info = get_vali_data.get_power_for_safe_mode()
+    range_power_for_safe_mode = 'C6:C14'
+    range_power_calc_for_safe_mode = 'D3:D11'
+    write_to_google_sheets(power_for_safe_mode_info, range_power_for_safe_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(power_for_safe_mode_info, range_power_calc_for_safe_mode, SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    power_for_data_transm_mode_info = get_vali_data.get_power_data_transm_mode()
+    range_power_for_data_transm_mode = 'D6:D14'
+    range_power_calc_for_data_transm_mode = 'H3:H11'
+    write_to_google_sheets(power_for_data_transm_mode_info, range_power_for_data_transm_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(power_for_data_transm_mode_info, range_power_calc_for_data_transm_mode, SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    power_for_operation_mode_info = get_vali_data.get_power_for_operation_mode()
+    range_power_for_operation_mode = 'E6:E14'
+    range_power_calc_for_operation_mode = 'F3:F11'
+    write_to_google_sheets(power_for_operation_mode_info, range_power_for_operation_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(power_for_operation_mode_info, range_power_calc_for_operation_mode, SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    power_for_beacon_exper_mode_info = get_vali_data.get_power_for_beacon_experiment_mode()
+    range_power_for_beacon_exper_mode = 'F6:F14'
+    range_power_calc_for_beacon_exper_mode = 'J3:J11'
+    write_to_google_sheets(power_for_beacon_exper_mode_info, range_power_for_beacon_exper_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(power_for_beacon_exper_mode_info, range_power_calc_for_beacon_exper_mode, SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    power_for_maneuver_mode_info = get_vali_data.get_power_for_maneuver_mode()
+    range_power_for_maneuver_mode = 'G6:G14'
+    range_power_calc_for_maneuver_mode = 'L3:L11'
+    write_to_google_sheets(power_for_maneuver_mode_info, range_power_for_maneuver_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(power_for_maneuver_mode_info, range_power_calc_for_maneuver_mode, SPREADSHEET_ID_POWER_CALCULATION, service)
+    # ------------------- time of modes
+
+    time_detumble_mode_info = get_vali_data.get_time_detumble()
+    range_time_detumble_mode = 'B4:B4'
+    range_time_detumble_mode_calc = 'C3:C3'
+    write_to_google_sheets(time_detumble_mode_info, range_time_detumble_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(time_detumble_mode_info, range_time_detumble_mode_calc,
+    #                        SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    time_safe_mode_info = get_vali_data.get_time_safe()
+    range_time_safe_mode = 'C4:C4'
+    range_time_safe_mode_calc = 'D3:D3'
+    write_to_google_sheets(time_safe_mode_info, range_time_safe_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(time_safe_mode_info, range_time_safe_mode_calc,
+    #                        SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    time_data_transm_mode_info = get_vali_data.get_time_data_transmitted_to_gs()
+    range_time_data_transm_mode = 'D4:D4'
+    range_time_data_transm_mode_calc = 'H3:H3'
+    write_to_google_sheets(time_data_transm_mode_info, range_time_data_transm_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(time_data_transm_mode_info, range_time_data_transm_mode_calc,
+    #                        SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    time_operation_mode_info = get_vali_data.get_time_operation()
+    range_time_operation_mode = 'E4:E4'
+    range_time_operation_mode_calc = 'F3:F3'
+    write_to_google_sheets(time_operation_mode_info, range_time_operation_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(time_operation_mode_info, range_time_operation_mode_calc,
+    #                        SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    time_beacon_exper_mode_info = get_vali_data.get_time_beacon_experiment()
+    range_time_beacon_exper_mode = 'F4:F4'
+    range_time_beacon_exper_mode_calc = 'J3:J3'
+    write_to_google_sheets(time_beacon_exper_mode_info, range_time_beacon_exper_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(time_beacon_exper_mode_info, range_time_beacon_exper_mode_calc,
+    #                        SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    time_maneuver_mode_info = get_vali_data.get_time_maneuver()
+    range_time_maneuver_mode = 'G4:G4'
+    range_time_maneuver_mode_calc = 'L3:L3'
+    write_to_google_sheets(time_maneuver_mode_info, range_time_maneuver_mode, SPREADSHEET_ID_POWER, service)
+    # write_to_google_sheets(time_maneuver_mode_info, range_time_maneuver_mode_calc,
+    #                        SPREADSHEET_ID_POWER_CALCULATION, service)
+
+    orbit_period_info = get_vali_data.get_orbit_period()
+    range_orbit_period = 'J4:J4'
+    write_to_google_sheets(orbit_period_info, range_orbit_period, SPREADSHEET_ID_DATA, service)
+
+    write_last_update_time(service, SPREADSHEET_ID_POWER)
+    # write_last_update_time(service, SPREADSHEET_ID_POWER_CALCULATION)
 
 
 def update_data_budget(service, get_vali_data):

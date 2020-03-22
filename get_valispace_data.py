@@ -38,9 +38,16 @@ LIST_MODES = [DETUMBLE, SAFE, DATA_TRANSMISSION, OPERATION, BEACON_EXPERIMENT,
 
 # ------------------ ORBITAL
 ORBITAL = 'Orbital'
-TIME_DATA_TRANSMIS = 'Time_Data_Transmission'
 PERIOD = 'Period'
 NUMBER_GS = 'Number_GS'
+
+# ------------------ TIME MODES
+TIME_DETUMBLE = 'Time_Detumble'
+TIME_SAFE = 'Time_Safe'
+TIME_DATA_TRANSMIS = 'Time_Data_Transmission'
+TIME_OPERATION = 'Time_Operation'
+TIME_BEACON_EXPERIMENT = 'Time_Beacon_Experiment'
+TIME_MANEUVER = 'Time_Maneuver'
 
 
 class GetValiData:
@@ -119,14 +126,6 @@ class GetValiData:
 
         return data_comp_budget
 
-    def get_time_data_transmitted_to_gs(self):
-        time_data_transmitted_to_gs = [[0.0]]
-
-        for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + TIME_DATA_TRANSMIS):
-                time_data_transmitted_to_gs[0][0] = vali['value']
-                return time_data_transmitted_to_gs
-
     def get_orbit_period(self):
         orbit_period = [[0.0]]
 
@@ -143,13 +142,84 @@ class GetValiData:
                 number_of_gs[0][0] = vali['value']
                 return number_of_gs
 
+    def _get_power_for_mode(self, MODE):
+        power_for_mode = [[0.0] for _ in LIST_COMP]
+        list_power_for_mode_comp = [name_comp + '.' + POWER_CONSUMPTION + '.' + MODE for name_comp in LIST_COMP]
 
+        for vali in self.project_vars:
+            if vali['name'] not in list_power_for_mode_comp:
+                continue
+            ind = LIST_COMP.index(vali['name'].split('.')[0])
+            power_for_mode[ind] = [vali['value']]
+        return power_for_mode
+
+    def get_power_for_detumble_mode(self):
+        return self._get_power_for_mode(DETUMBLE)
+
+    def get_power_for_safe_mode(self):
+        return self._get_power_for_mode(SAFE)
+
+    def get_power_data_transm_mode(self):
+        return self._get_power_for_mode(DATA_TRANSMISSION)
+
+    def get_power_for_operation_mode(self):
+        return self._get_power_for_mode(OPERATION)
+
+    def get_power_for_beacon_experiment_mode(self):
+        return self._get_power_for_mode(BEACON_EXPERIMENT)
+
+    def get_power_for_maneuver_mode(self):
+        return self._get_power_for_mode(MANEUVER)
+
+    def get_time_detumble(self):
+        time_detumble = [[0.0]]
+
+        for vali in self.project_vars:
+            if vali['name'] == str(ADSC + '.' + TIME_DETUMBLE):
+                time_detumble[0][0] = vali['value']
+                return time_detumble
+
+    def get_time_safe(self):
+        time_safe = [[0.0]]
+
+        for vali in self.project_vars:
+            if vali['name'] == str(ORBITAL + '.' + TIME_SAFE):
+                time_safe[0][0] = vali['value']
+                return time_safe
+
+    def get_time_data_transmitted_to_gs(self):
+        time_data_transmitted_to_gs = [[0.0]]
+
+        for vali in self.project_vars:
+            if vali['name'] == str(ORBITAL + '.' + TIME_DATA_TRANSMIS):
+                time_data_transmitted_to_gs[0][0] = vali['value']
+                return time_data_transmitted_to_gs
+
+    def get_time_operation(self):
+        time_operation = [[0.0]]
+
+        for vali in self.project_vars:
+            if vali['name'] == str(ORBITAL + '.' + TIME_OPERATION):
+                time_operation[0][0] = vali['value']
+                return time_operation
+
+    def get_time_beacon_experiment(self):
+        time_beacon_experiment = [[0.0]]
+
+        for vali in self.project_vars:
+            if vali['name'] == str(ORBITAL + '.' + TIME_BEACON_EXPERIMENT):
+                time_beacon_experiment[0][0] = vali['value']
+                return time_beacon_experiment
+
+    def get_time_maneuver(self):
+        time_maneuver = [[0.0]]
+
+        for vali in self.project_vars:
+            if vali['name'] == str(ORBITAL + '.' + TIME_MANEUVER):
+                time_maneuver[0][0] = vali['value']
+                return time_maneuver
 
 
         # for x in self.project_vars:
         #     print(x)
-        # valispace.get_vali_by_name(vali_name='Blade', project_name='Fan)
-
-
-
-
+        # valispace_api.get_vali_by_name(vali_name='Blade', project_name='Fan)
