@@ -166,7 +166,15 @@ def update_power_budget(service, get_vali_data):
 
     orbit_period_info = get_vali_data.get_orbit_period()
     range_orbit_period = 'J4:J4'
-    write_to_google_sheets(orbit_period_info, range_orbit_period, SPREADSHEET_ID_DATA, service)
+    write_to_google_sheets(orbit_period_info, range_orbit_period, SPREADSHEET_ID_POWER, service)
+
+    number_of_gs_info = get_vali_data.get_number_of_gs()
+    range_number_of_gs = 'J9:J9'
+    write_to_google_sheets(number_of_gs_info, range_number_of_gs, SPREADSHEET_ID_POWER, service)
+
+    number_of_gs_info = get_vali_data.get_number_of_beacon_gs()
+    range_number_of_gs = 'J10:J10'
+    write_to_google_sheets(number_of_gs_info, range_number_of_gs, SPREADSHEET_ID_POWER, service)
 
     write_last_update_time(service, SPREADSHEET_ID_POWER)
     # write_last_update_time(service, SPREADSHEET_ID_POWER_CALCULATION)
@@ -190,12 +198,20 @@ def update_data_budget(service, get_vali_data):
     write_to_google_sheets(time_data_transmitted_to_gs_info, range_time_data_transmitted_to_gs, SPREADSHEET_ID_DATA, service)
 
     orbit_period_info = get_vali_data.get_orbit_period()
-    range_orbit_period = 'F11:F11'
+    range_orbit_period = 'J8:J8'
     write_to_google_sheets(orbit_period_info, range_orbit_period, SPREADSHEET_ID_DATA, service)
 
     number_of_gs_info = get_vali_data.get_number_of_gs()
     range_number_of_gs = 'F9:F9'
     write_to_google_sheets(number_of_gs_info, range_number_of_gs, SPREADSHEET_ID_DATA, service)
+
+    time_operation_mode_info = get_vali_data.get_time_operation()
+    range_time_operation_mode = 'J12:J12'
+    write_to_google_sheets(time_operation_mode_info, range_time_operation_mode, SPREADSHEET_ID_DATA, service)
+
+    time_beacon_exper_mode_info = get_vali_data.get_time_beacon_experiment()
+    range_time_beacon_exper_mode = 'J13:J13'
+    write_to_google_sheets(time_beacon_exper_mode_info, range_time_beacon_exper_mode, SPREADSHEET_ID_DATA, service)
 
     write_last_update_time(service, SPREADSHEET_ID_DATA)
 
@@ -211,11 +227,11 @@ def main():
     # ---------------------- UPDATE COST BUDGET
     update_cost_budget(service, get_vali_data)
 
-    # ---------------------- UPDATE POWER BUDGET
-    update_power_budget(service, get_vali_data)
+    # ---------------------- UPDATE POWER BUDGET !
+    # update_power_budget(service, get_vali_data)
 
-    # ---------------------- UPDATE DATA BUDGET
-    update_data_budget(service, get_vali_data)
+    # ---------------------- UPDATE DATA BUDGET !
+    # update_data_budget(service, get_vali_data)
 
 
 main()
