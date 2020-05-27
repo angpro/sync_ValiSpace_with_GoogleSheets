@@ -1,5 +1,7 @@
 import valispace
 
+
+CUBESAT = 'CubeSat1'
 # ------------------ COMPONENTS
 ADSC = 'ADCS'
 COMMUNICATION = 'Communication'
@@ -40,6 +42,7 @@ LIST_MODES = [DETUMBLE, SAFE, DATA_TRANSMISSION, OPERATION, BEACON_EXPERIMENT,
 ORBITAL = 'Orbital'
 PERIOD = 'Period'
 NUMBER_GS = 'Number_GS'
+NUMBER_BEACON_GS = 'Number_Beacon_GS'
 
 # ------------------ TIME MODES
 TIME_DETUMBLE = 'Time_Detumble'
@@ -66,14 +69,30 @@ class GetValiData:
         self.project_vars = self.valispace_api.get_vali_list(
             project_name=project_name)
 
+    @staticmethod
+    def check_name(vali_name, first, second=None, third=None):
+        if third:
+            if vali_name == first + '.' + second + '.' + third or vali_name == CUBESAT + '.' + first +'.'+ second +'.'+ third:
+                return True
+        if second:
+            if vali_name == first + '.' + second or vali_name == CUBESAT + '.' + first + '.' + second:
+                return True
+        if vali_name == first or vali_name == CUBESAT + '.' + first:
+            return True
+        return False
+
     def get_comp_mass_info(self):
         mass_budget = [[0.0, 0.0] for _ in LIST_COMP]
         list_mass_comp = [name_comp + '.' + MASS for name_comp in LIST_COMP]
+        list_price_comp1 = [CUBESAT + '.' + name_comp + '.' + MASS for name_comp in LIST_COMP]
 
         for vali in self.project_vars:
-            if vali['name'] not in list_mass_comp:
+            if vali['name'] not in list_mass_comp and vali['name'] not in list_price_comp1:
                 continue
-            ind = LIST_COMP.index(vali['name'].split('.')[0])
+            if vali['name'].split('.')[0] in LIST_COMP:
+                ind = LIST_COMP.index(vali['name'].split('.')[0])
+            if vali['name'].split('.')[1] in LIST_COMP:
+                ind = LIST_COMP.index(vali['name'].split('.')[1])
             mass_budget[ind] = [vali['value'], vali['margin_plus']/100]
         return mass_budget
 
@@ -81,18 +100,22 @@ class GetValiData:
         mass_propulsion_info = [[0.0, 0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(PROPULSION + '.' + MASS_PROPELLANT):
+            if self.check_name(vali['name'], PROPULSION, MASS_PROPELLANT):
                 mass_propulsion_info[0] = [vali['value'], vali['margin_plus']/100]
                 return mass_propulsion_info
 
     def get_comp_price_info(self):
         cost_budget = [[0.0] for _ in LIST_COMP]
         list_price_comp = [name_comp + '.' + PRICE for name_comp in LIST_COMP]
+        list_price_comp1 = [CUBESAT + '.' + name_comp + '.' + PRICE for name_comp in LIST_COMP]
 
         for vali in self.project_vars:
-            if vali['name'] not in list_price_comp:
+            if vali['name'] not in list_price_comp and vali['name'] not in list_price_comp1:
                 continue
-            ind = LIST_COMP.index(vali['name'].split('.')[0])
+            if vali['name'].split('.')[0] in LIST_COMP:
+                ind = LIST_COMP.index(vali['name'].split('.')[0])
+            if vali['name'].split('.')[1] in LIST_COMP:
+                ind = LIST_COMP.index(vali['name'].split('.')[1])
             cost_budget[ind] = [vali['value']]
         return cost_budget
 
@@ -100,9 +123,9 @@ class GetValiData:
         data_payload_budget = [[0.0], [0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(PAYLOAD_PROBE + '.' + DATA_RATE_TRANSMITTED + '.' + OPERATION):
+            if self.check_name(vali['name'], PAYLOAD_PROBE, DATA_RATE_TRANSMITTED, OPERATION):
                 data_payload_budget[0][0] = vali['value']
-            if vali['name'] == str(PAYLOAD_RADIOTOMOGRAPHY + '.' + DATA_RATE_TRANSMITTED + '.' + BEACON_EXPERIMENT):
+            if self.check_name(vali['name'], PAYLOAD_RADIOTOMOGRAPHY, DATA_RATE_TRANSMITTED, BEACON_EXPERIMENT):
                 data_payload_budget[1][0] = vali['value']
 
         return data_payload_budget
@@ -111,7 +134,7 @@ class GetValiData:
         data_downlink_budget = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(COMMUNICATION + '.' + DOWNLINK):
+            if self.check_name(vali['name'], COMMUNICATION, DOWNLINK):
                 data_downlink_budget[0][0] = vali['value']
                 return data_downlink_budget
 
@@ -119,9 +142,9 @@ class GetValiData:
         data_comp_budget = [[0.0], [0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ADSC + '.' + DATA_RATE_TRANSMITTED + '.' + OPERATION):
+            if self.check_name(vali['name'], ADSC, DATA_RATE_TRANSMITTED, OPERATION):
                 data_comp_budget[0][0] = vali['value']
-            if vali['name'] == str(ON_BOARD_COMPUTER + '.' + DATA_RATE_TRANSMITTED + '.' + OPERATION):
+            if self.check_name(vali['name'], ON_BOARD_COMPUTER, DATA_RATE_TRANSMITTED, OPERATION):
                 data_comp_budget[1][0] = vali['value']
 
         return data_comp_budget
@@ -130,7 +153,7 @@ class GetValiData:
         orbit_period = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + PERIOD):
+            if self.check_name(vali['name'], ORBITAL, PERIOD):
                 orbit_period[0][0] = vali['value']
                 return orbit_period
 
@@ -138,19 +161,34 @@ class GetValiData:
         number_of_gs = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + NUMBER_GS):
+            if self.check_name(vali['name'], ORBITAL, NUMBER_GS):
                 number_of_gs[0][0] = vali['value']
                 return number_of_gs
+
+    def get_number_of_beacon_gs(self):
+        number_of_beacon_gs = [[0.0]]
+
+        for vali in self.project_vars:
+            if self.check_name(vali['name'], ORBITAL, NUMBER_BEACON_GS):
+                number_of_beacon_gs[0][0] = vali['value']
+                return number_of_beacon_gs
 
     def _get_power_for_mode(self, MODE):
         power_for_mode = [[0.0] for _ in LIST_COMP]
         list_power_for_mode_comp = [name_comp + '.' + POWER_CONSUMPTION + '.' + MODE for name_comp in LIST_COMP]
+        list_power_for_mode_comp1 = [CUBESAT + '.' + name_comp + '.' + POWER_CONSUMPTION + '.' + MODE for name_comp in LIST_COMP]
+        print(MODE)
 
         for vali in self.project_vars:
-            if vali['name'] not in list_power_for_mode_comp:
+            if vali['name'] not in list_power_for_mode_comp and vali['name'] not in list_power_for_mode_comp1:
                 continue
-            ind = LIST_COMP.index(vali['name'].split('.')[0])
+            if vali['name'].split('.')[0] in LIST_COMP:
+                ind = LIST_COMP.index(vali['name'].split('.')[0])
+            if vali['name'].split('.')[1] in LIST_COMP:
+                ind = LIST_COMP.index(vali['name'].split('.')[1])
             power_for_mode[ind] = [vali['value']]
+        print(power_for_mode)
+
         return power_for_mode
 
     def get_power_for_detumble_mode(self):
@@ -175,7 +213,7 @@ class GetValiData:
         time_detumble = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ADSC + '.' + TIME_DETUMBLE):
+            if self.check_name(vali['name'], ADSC, TIME_DETUMBLE):
                 time_detumble[0][0] = vali['value']
                 return time_detumble
 
@@ -183,7 +221,7 @@ class GetValiData:
         time_safe = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + TIME_SAFE):
+            if self.check_name(vali['name'], ORBITAL, TIME_SAFE):
                 time_safe[0][0] = vali['value']
                 return time_safe
 
@@ -191,7 +229,7 @@ class GetValiData:
         time_data_transmitted_to_gs = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + TIME_DATA_TRANSMIS):
+            if self.check_name(vali['name'], ORBITAL, TIME_DATA_TRANSMIS):
                 time_data_transmitted_to_gs[0][0] = vali['value']
                 return time_data_transmitted_to_gs
 
@@ -199,7 +237,7 @@ class GetValiData:
         time_operation = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + TIME_OPERATION):
+            if self.check_name(vali['name'], ORBITAL, TIME_OPERATION):
                 time_operation[0][0] = vali['value']
                 return time_operation
 
@@ -207,7 +245,7 @@ class GetValiData:
         time_beacon_experiment = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + TIME_BEACON_EXPERIMENT):
+            if self.check_name(vali['name'], ORBITAL, TIME_BEACON_EXPERIMENT):
                 time_beacon_experiment[0][0] = vali['value']
                 return time_beacon_experiment
 
@@ -215,7 +253,7 @@ class GetValiData:
         time_maneuver = [[0.0]]
 
         for vali in self.project_vars:
-            if vali['name'] == str(ORBITAL + '.' + TIME_MANEUVER):
+            if self.check_name(vali['name'], ORBITAL, TIME_MANEUVER):
                 time_maneuver[0][0] = vali['value']
                 return time_maneuver
 
